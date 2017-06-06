@@ -1,21 +1,46 @@
 import _ from 'lodash'
 import auth from '../auth'
 const API_URL = 'http://localhost:3001/'
-const MAKE_BOOKING_URL = API_URL + 'bookings'
+const BOOKING_URL = API_URL + 'bookings'
 
 export default {
-  makeBooking (context, start, finish, parking, userid) {
+  makeBooking (context, start, finish, parking, userId) {
     const p = new Promise((resolve, reject) => {
-      context.$http.post(MAKE_BOOKING_URL, {parking: parking, user: auth.getMetaData()['id'], time: _.range(start, finish), status: 'pending', token: auth.getToken()}).then(response => {
+      context.$http.post(BOOKING_URL, {parking: parking, user: userId, time: _.range(start, finish), status: 'pending', token: auth.getToken()}).then(response => {
         resolve(response)
       })
     })
     return p
   },
-  getBookings (context, userid) {
+  getBookings (context, userId = false) {
+    let p = null
+    if (!userId) {
+      // get all bookings
+      p = new Promise((resolve, reject) => {
+        context.$http.get(BOOKING_URL).then(response => {
+          resolve(response.body.bookings)
+        }, err => {
+          reject(err.message)
+        })
+      })
+    } else {
+      // get bookings for one user
+      p = new Promise((resolve, reject) => {
+        context.$http.get(BOOKING_URL, {params: {user: userId}}).then(response => {
+          resolve(response.body.bookings)
+        }, err => {
+          reject(err.nessage)
+        })
+      })
+    }
+    return p
+  },
+  updateBooking (context, booking) {
     const p = new Promise((resolve, reject) => {
-      context.$http.get(MAKE_BOOKING_URL, {params: {user: userid}}).then(response => {
-        resolve(response.body.bookings)
+      context.$http.put(BOOKING_URL, {booking: booking, token: auth.getToken()}).then(response => {
+        resolve(response.message)
+      }, err => {
+        reject(err.message)
       })
     })
     return p

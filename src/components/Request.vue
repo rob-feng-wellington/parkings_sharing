@@ -104,7 +104,7 @@ export default {
       this.$router.push('signup')
     },
     handleConfirm () {
-      booking.makeBooking(this, request.getStartByNumber(), request.getFinishByNumber(), request.getParking()).then(data => {
+      booking.makeBooking(this, request.getStartByNumber(), request.getFinishByNumber(), request.getParking(), auth.getUserId()).then(data => {
         localStorage.removeItem('request')
         this.$router.push('/')
       })

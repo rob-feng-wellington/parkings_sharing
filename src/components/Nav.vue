@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-toggleable-md navbar-light navbar-inverse bg-primary bg-faded">
+  <nav class="navbar navbar-toggleable-md navbar-light sticky-top navbar-inverse bg-primary bg-faded">
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -9,7 +9,7 @@
         </ul>
         <span class="navbar-text navbar-right">
           <div v-if="isLogedIn()">
-            <span> Welcome {{ getUserEmail() }}</span>
+            <span> Welcome {{ user_email }}</span>
             <span><button class="btn btn-primary" @click="handleLogout()">Log out</button></span>
           </div>
           <div v-else>
@@ -25,12 +25,14 @@
 import auth from '../auth'
 
 export default {
+  data () {
+    return {
+      user_email: auth.getUserEmail()
+    }
+  },
   methods: {
     isLogedIn () {
       return auth.checkAuth()
-    },
-    getUserEmail () {
-      return auth.getMetaData()['email']
     },
     handleLogin () {
       this.$router.push('login')

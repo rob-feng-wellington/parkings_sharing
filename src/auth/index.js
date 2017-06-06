@@ -11,7 +11,6 @@ export default {
 
   login (context, creds, redirect) {
     context.$http.post(LOGIN_URL, creds).then(data => {
-      console.log(redirect)
       localStorage.setItem('token', data.body.token)
       localStorage.setItem('user_meta', JSON.stringify(data.body.user))
       this.user.authenticated = true
@@ -21,13 +20,12 @@ export default {
         location.reload()
       }
     }, err => {
-      context.error = err
+      context.error = err.body.message
     })
   },
 
   signup (context, creds, redirect) {
     context.$http.post(SIGNUP_URL, creds).then(data => {
-      console.log(data)
       localStorage.setItem('token', data.body.token)
       localStorage.setItem('user_meta', JSON.stringify(data.body.user))
       this.user.authenticated = true
@@ -37,7 +35,7 @@ export default {
         location.reload()
       }
     }, err => {
-      context.error = err
+      context.error = err.body.message
     })
   },
 
@@ -57,7 +55,19 @@ export default {
 
   getMetaData () {
     const userMeta = JSON.parse(localStorage.getItem('user_meta'))
-    return userMeta || {email: '', id: ''}
+    return userMeta || {email: '', id: '', isProvider: false}
+  },
+
+  getUserEmail () {
+    return this.getMetaData()['email']
+  },
+
+  getUserId () {
+    return this.getMetaData()['id']
+  },
+
+  getUserIsProvider () {
+    return this.getMetaData()['isProvider']
   },
 
   getToken () {

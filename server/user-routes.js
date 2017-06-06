@@ -22,14 +22,14 @@ app.post('/api/users', function(req, res) {
       var new_user = new User({
         email: req.body.email,
         password: SHA256(req.body.password),
-        type: req.body.type
+        type: req.body.type || 'individual'
       });
       new_user.save().then(function(user){
         res.status(201).send({
           success: true, 
           message: 'user created successfully',
           token:createIdToken(new_user), 
-          user:{email: user.email, id:user._id}
+          user:{email: user.email, id:user._id, isProvider: (user.type && user.type === 'business')}
         });
       }, function(err){
         if (err) throw err;
@@ -52,7 +52,7 @@ app.post('/sessions/create', function(req, res) {
           success: true,
           message: 'Token created',
           token: token,
-          user: {email: user.email, id: user._id}
+          user: {email: user.email, id: user._id, isProvider: (user.type && user.type === 'business')}
         };
         res.status(201).send(reply);
       }

@@ -30,7 +30,7 @@ app.get('/setup', function(req, res) {
   
   //business
   var coutinho = new User({
-    email: 'coutinho.c@lfc.com',
+    email: 'coutinho.p@lfc.com',
     password: SHA256('number10'),
     type: 'business'
   });

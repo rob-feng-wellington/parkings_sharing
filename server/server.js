@@ -25,6 +25,7 @@ app.use(logger('dev'));
 app.use(errorhandler());
 
 //not protected
+app.use(require('./test'));
 app.use(require('./user-routes'));
 app.use(require('./setup'));
 app.use(require('./parking-routes'))
